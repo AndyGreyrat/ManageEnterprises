@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lista de movimientos</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <style>
+    a{
+    color:white;
+    }
+    a:hover {
+    color: white;
+    text-decoration:none;
+    }
+</style>
+</head>
+<body class="bg-dark text-white">
+
+<div class="container fw-bold bg-dark text-white">
+    <p th:inline="text" class="text-right fw-bold">User: [[${#httpServletRequest.remoteUser}]]</p>
+    <button type="button" class="btn btn-danger fw-bold text-white" style="float:right"><a th:href="@{/logout}">Log Out</a></button>
+
+    <h1 class="display-5 fw-bold"> Lista de movimientos</h1>
+
+    <br><table class="table table-bordered fw-bold bg-dark text-white ">
+    <tr>
+        <th class="fw-bold">ID</th>
+        <th class="fw-bold">Concepto</th>
+        <th class="text-right fw-bold">Valor</th>
+        <th class="fw-bold">Usuario Responsable</th>
+        <th class="fw-bold">Empresa </th>
+        <th class="fw-bold">Fecha del Movimiento</th>
+        <th class="fw-bold">Editar</th>
+        <th class="fw-bold">Eliminar</th>
+    </tr>
+
+
+    <tr th:each="movement : ${movementList}">
+        <td th:text="${movement.id}"></td>
+        <td th:if="${movement.concepto=='1'}">Materias Primas</td>
+        <td th:if="${movement.concepto=='2'}">Aditivos</td>
+        <td th:if="${movement.concepto=='3'}">Empaques</td>
+        <td th:if="${movement.concepto=='4'}">Servicios Publicos</td>
+        <td th:if="${movement.concepto=='5'}">Arriendo</td>
+        <td th:if="${movement.concepto=='6'}">Nomina</td>
+        <td th:if="${movement.concepto=='7'}">Maquinaria y Equipo</td>
+        <td th:if="${movement.concepto=='8'}">Aseo</td>
+        <td th:if="${movement.concepto=='9'}">Papeleria</td>
+        <td th:if="${movement.concepto=='10'}">Proviciones Tributarias</td>
+        <td th:if="${movement.concepto=='11'}">Transporte</td>
+        <td th:if="${movement.concepto=='12'}">Seguridad Social</td>
+        <td class="text-right fw-bold" th:text="${#numbers.formatCurrency(movement.monto)}"></td>
+        <td th:text="${movement.usuario.nombre}"></td>
+        <td th:text="${movement.usuario.empresa}"></td>
+        <td th:text="${#dates.format(movement.fecha, 'dd/MM/yyyy')}"></td>
+        <td><button type="button" class="btn btn-warning fw-bold text-white"><a th:href="@{/editmovement/{id}(id=${movement.id})}">Editar</a></button></td>
+        <td><button type="button" class="btn btn-danger fw-bold text-white"><a th:href="@{/deletemovement/{id}(id=${movement.id})}">Eliminar</a></button></td>
+    </tr>
+</table>
+
+      <nav aria-label="Ejemplo navegacion">
+        <ul class="pagination mt-4 fw-bold">
+            <li th:class="${paginaActual==estado.index} ? 'active' : '' fw-bold " th:each="pagina, estado: ${paginas}" class="page-item">
+                <a th:href="@{/viewmovement/(pagina=${estado.index})}" class="page-link fw-bold" th:text="${estado.index}+1"></a>
+            </li>
+        </ul>
+    </nav>
+
+     <div class="row fw-bold">
+        <div class="form-group col-md-12">
+            <label class="col-md-3 fw-bold" for="sumaMontos">Total Movimientos:</label>
+            <div class="col-md-6 fw-bold">
+                <p th:text="${#numbers.formatCurrency(sumaMontos)}" class="form-control fw-bold bg-dark text-white" id="sumaMontos"></p>
+            </div>
+        </div>
+    </div>
+
+
+    <button type="button" class="btn btn-info fw-bold text-white"><a th:href="@{/addmovement}">Agregar Nuevo Movimiento</a></button>
+    <br><br>
+
+    <button type="button" class="btn btn-primary fw-bold text-white"><a th:href="@{/viewenterprises}">Ver lista de Empresas</a></button>
+    <br><br>
+
+    <button type="button" class="btn btn-primary fw-bold text-white"><a th:href="@{/viewusers}">Ver lista de Empleados</a></button>
+</div>
+
+<script th:inline="javascript">
+    window.onload=function(){
+
+        var msg= [[${mensaje}]];
+        if (msg == "it was saved"){
+            Command : toastr["success"]("Movimiento registrado con éxito!")
+            }
+        else if (msg == "it was updated"){
+            Command : toastr["success"]("Movimiento actualizado con éxito!")
+        }
+        else if (msg == "it was deleted"){
+            Command : toastr["success"]("Movimiento eliminado con éxito!")
+        }
+        else if (msg == "it was not deleted"){
+            Command : toastr["error"]("Movimiento no pudo ser eliminado!")
+        }
+        toastr.options={
+            "positionClass": "toast-top-right",
+            "showDuration":"300",
+            "showMethod":"fadeIn",
+            "hideMethod":"fadeOut",
+        }
+
+
+    }
+
+</script>
+
+</body>
+</html>
+

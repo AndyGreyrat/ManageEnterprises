@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Agregar movimiento de dinero</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <style>
+    a{
+    color:white;
+    }
+    a:hover {
+    color: white;
+    text-decoration:none;
+    }
+</style>
+</head>
+<body class="bg-dark text-white">
+
+<div class="container fw-bold">
+    <p th:inline="text" class="text-right fw-bold">User: [[${#httpServletRequest.remoteUser}]]</p><br>
+    <button type="button" class="btn btn-danger fw-bold text-white" style="float:right"><a th:href="@{/logout}">Log out</a></button>
+
+    <h1 class="display-5 fw-bold"> Agregue aqui los datos del movimiento</h1>
+    <br>
+
+    <form th:action="@{/savemovement}" th:object="${movement}" method="post">
+
+        <div class="row fw-bold">
+            <div class="form-group col-md-12">
+                <label class="col-md-3 fw-bold" for="concepto">Concepto del Movimiento:</label>
+                <div class="col-md-6 fw-bold bg-dark text-white">
+                    <select th:field="*{concepto}" class="form-control fw-bold bg-dark text-white" id="concepto" required="required">
+                        <option th:value=1>Materias Primas</option>
+                        <option th:value=2>Aditivos</option>
+                        <option th:value=3>Empaques</option>
+                        <option th:value=4>Servicios públicos</option>
+                        <option th:value=5>Arriendo</option>
+                        <option th:value=6>Nómina</option>
+                        <option th:value=7>Maquinaria y Equipo</option>
+                        <option th:value=8>Aseo</option>
+                        <option th:value=9>Papelería</option>
+                        <option th:value=10>Provisiones tributarias</option>
+                        <option th:value=11>Transporte</option>
+                        <option th:value=12>Seguridad Social</option>
+
+                    </select>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row fw-bold">
+            <div class="form-group col-md-12 fw-bold">
+                <label class="col-md-3 fw-bold" for="monto">Valor del movimiento:</label>
+                <div class="col-md-6 fw-bold">
+                    <input type="number" th:field="*{monto}" class="form-control fw-bold bg-dark text-white" id="monto" required="required"></div>
+            </div>
+        </div>
+
+
+        <div class="row fw-bold">
+            <div class="form-group col-md-12 fw-bold">
+                <label class="col-md-3 fw-bold" for="usuario">Empleado responsable:</label>
+                <div class="col-md-6 fw-bold">
+                    <select th:field="*{usuario}" class="form-control fw-bold bg-dark text-white" id="usuario" required="required" readonly>
+                        <option th:each = "user: ${userList}" th:value="${user.id}" th:text = "${user.nombre}"></option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="row fw-bold bg-dark text-white">
+            <div class="form-group col-md-12 fw-bold bg-dark text-white">
+                <label class="col-md-3 fw-bold bg-dark text-white" for="fecha">Fecha del movimiento:</label>
+                <div class="col-md-6 fw-bold bg-dark text-white">
+                    <input type="date" th:field="*{fecha}" class="form-control fw-bold bg-dark text-white" id="fecha" required="required"></div>
+            </div>
+        </div>
+
+
+        <div class="row fw-bold">
+            <div class="col-md-2 fw-bold">
+                <button class="btn btn-success fw-bold text-white">Registrar Movimiento</button>
+            </div>
+        </div>
+
+    </form>
+
+    <br>
+    <a href="javascript: history.go(-1)" class="btn btn-info fw-bold bg-dark text-white" role="button">Atrás</a>
+
+</div>
+<script th:inline="javascript">
+  window.unload=function(){
+  document.getElementById("fecha").value=new Date().toJSON().slice(0,10).replace(/-/g,'-');
+  }
+</script>
+
+
+</body>
+</html>
+
